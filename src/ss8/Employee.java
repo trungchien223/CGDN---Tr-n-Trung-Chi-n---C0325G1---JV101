@@ -6,6 +6,8 @@ public class Employee {
     private String awards;
     private String ctc;
     private String experience;
+    public Employee(){
+    }
     public Employee(String name, String age, String awards, String ctc, String experience) {
         this.name = name;
         this.age = age;
