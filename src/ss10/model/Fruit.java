@@ -1,17 +1,19 @@
 package ss10.model;
 
+import java.util.Date;
+
 public class Fruit {
     private String fruitName;
     private String fruitType;
-    private int productionDate;
-    private int expirationDate;
+    private String productionDate;
+    private String expirationDate;
     private String origin;
     private double price;
 
     public Fruit() {
     }
 
-    public Fruit(String fruitName, String fruitType, int productionDate, int expirationDate, String origin, double price) {
+    public Fruit(String fruitName, String fruitType, String productionDate, String expirationDate, String origin, double price) {
         this.fruitName = fruitName;
         this.fruitType = fruitType;
         this.productionDate = productionDate;
@@ -36,19 +38,19 @@ public class Fruit {
         this.fruitType = fruitType;
     }
 
-    public int getProductionDate() {
+    public String getProductionDate() {
         return productionDate;
     }
 
-    public void setProductionDate(int productionDate) {
+    public void setProductionDate(String productionDate) {
         this.productionDate = productionDate;
     }
 
-    public int getExpirationDate() {
+    public String getExpirationDate() {
         return expirationDate;
     }
 
-    public void setExpirationDate(int expirationDate) {
+    public void setExpirationDate(String expirationDate) {
         this.expirationDate = expirationDate;
     }
 

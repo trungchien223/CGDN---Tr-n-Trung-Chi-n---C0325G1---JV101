@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FruitRepository implements IFruitRepository{
-    private List<Fruit> fruitList = new ArrayList<>();
+    private final List<Fruit> fruitList = new ArrayList<>();
 
     @Override
     public List<Fruit> getAll() {

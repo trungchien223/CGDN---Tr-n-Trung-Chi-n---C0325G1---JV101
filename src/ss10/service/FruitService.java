@@ -7,7 +7,7 @@ import ss10.repository.IFruitRepository;
 import java.util.List;
 
 public class FruitService implements IFruitService{
-    private IFruitRepository repository = new FruitRepository();
+    private final IFruitRepository repository = new FruitRepository();
     @Override
     public List<Fruit> getAll() {
         return repository.getAll();
