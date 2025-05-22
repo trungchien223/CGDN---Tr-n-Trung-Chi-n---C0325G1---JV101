@@ -1,4 +1,4 @@
-package ss10.Utils;
+package ss10.utils;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -29,7 +29,7 @@ public class Regex {
             return false;
         }
     }
-    public static boolean isProductionDateValid(String productionDateStr) {
+    public static boolean isNotAfterToday(String productionDateStr) {
         try {
             LocalDate productionDate = LocalDate.parse(productionDateStr, DATE_FORMATTER);
             return !productionDate.isAfter(LocalDate.now());

@@ -1,18 +1,29 @@
 package ss10.view;
 
-import ss10.Utils.Regex;
+import ss10.utils.Regex;
 import ss10.model.Fruit;
-import java.util.List;
+import ss10.service.IFruitService;
+
+import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 public class FruitView {
     private static final Scanner scanner = new Scanner(System.in);
-
-    public static void display(List<Fruit> fruits) {
-        System.out.println(" Danh sách trái cây ");
-        for (Fruit fruit : fruits) {
-            System.out.println(fruit);
+    public static void displayByKey(Set<String> keys, IFruitService service) {
+        for (String key : keys) {
+            Fruit fruit = service.getByCode(key);
+            System.out.println("Mã: " + key + " - " + fruit);
         }
+    }
+    public static void displayByEntries(Set<Map.Entry<String, Fruit>> entries) {
+        for (Map.Entry<String, Fruit> entry : entries) {
+            System.out.println("Mã: " + entry.getKey() + " - " + entry.getValue());
+        }
+    }
+    public static String inputCode() {
+        System.out.print("Nhập mã trái cây: ");
+        return scanner.nextLine();
     }
     public static Fruit addFruit() {
         String origin, name, type;
@@ -45,7 +56,7 @@ public class FruitView {
                 System.out.println("Định dạng không hợp lệ. Phải là dd/MM/yyyy");
                 continue;
             }
-            if (!Regex.isProductionDateValid(productionDate)) {
+            if (!Regex.isNotAfterToday(productionDate)) {
                 System.out.println("Ngày sản xuất không được lớn hơn ngày hôm nay");
                 continue;
             }
@@ -65,21 +76,35 @@ public class FruitView {
         while (true) {
             System.out.print("Xuất xứ: ");
             origin = scanner.nextLine();
-            if (Regex.isValidOrigin(origin))
+            if (Regex.isValidOrigin(origin)) {
                 break;
+            }
             System.out.println("Xuất xứ không hợp lệ");
         }
         while (true) {
             try {
                 System.out.print("Giá: ");
                 price = Double.parseDouble(scanner.nextLine());
-                if (price > 0)
+                if (price > 0 && price <= 100000000) {
                     break;
-                System.out.println("Giá phải > 0");
+                }
+                System.out.println("Giá phải > 0 và nhỏ hơn 100 triệu");
             } catch (NumberFormatException e) {
                 System.out.println("Vui lòng nhập số");
             }
         }
         return new Fruit(name, type, productionDate, expirationDate, origin, price);
+    }
+    public static String inputCodeToUpdate() {
+        System.out.print("Nhập mã trái cây cần sửa: ");
+        return scanner.nextLine();
+    }
+    public static Fruit updateFruit(Fruit oldFruit) {
+        System.out.println("Thông tin hiện tại: " + oldFruit);
+        return addFruit();
+    }
+    public static String deleteFruit() {
+        System.out.print("Nhập mã trái cây cần xóa: ");
+        return scanner.nextLine();
     }
 }

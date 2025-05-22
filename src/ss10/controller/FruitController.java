@@ -14,21 +14,41 @@ public class FruitController {
         Scanner scanner = new Scanner(System.in);
         int choice;
         do {
-            System.out.println("Quản Lí Trái Cây");
-            System.out.println("1. Hiển thị danh sách trái cây");
-            System.out.println("2. Thêm trái cây");
+            System.out.println(" Quản Lý Trái Cây ");
+            System.out.println("1. Hiển thị (theo keySet)");
+            System.out.println("2. Hiển thị (theo entrySet)");
+            System.out.println("3. Thêm");
+            System.out.println("4. Xóa");
+            System.out.println("5. Sửa");
             System.out.println("0. Thoát");
-            System.out.print("Chọn chức năng: ");
+            System.out.print("Chọn: ");
             choice = Integer.parseInt(scanner.nextLine());
             switch (choice){
                 case 1:
-                    List<Fruit> fruitList = fruitService.getAll();
-                    FruitView.display(fruitList);
+                    FruitView.displayByKey(fruitService.getAllKeys(), fruitService);
                     break;
                 case 2:
+                    FruitView.displayByEntries(fruitService.getAllEntries());
+                    break;
+                case 3:
+                    String addCode = FruitView.inputCode();
                     Fruit fruit = FruitView.addFruit();
-                    fruitService.add(fruit);
-                    System.out.println("Them thanh cong");
+                    fruitService.add(addCode, fruit);
+                    System.out.println("Thêm thành công.");
+                    break;
+                case 4:
+                    String removeCode = FruitView.deleteFruit();
+                    fruitService.containsCode(removeCode);
+                    fruitService.remove(removeCode);
+                    System.out.println("Xóa thành công.");
+                    break;
+                case 5:
+                    String updateCode = FruitView.inputCodeToUpdate();
+                    fruitService.containsCode(updateCode);
+                    Fruit oldFruit = fruitService.getByCode(updateCode);
+                    Fruit newFruit = FruitView.updateFruit(oldFruit);
+                    fruitService.update(updateCode, newFruit);
+                    System.out.println("Cập nhật thành công.");
                     break;
                 case 0:
                     System.out.println("Đã thoát");

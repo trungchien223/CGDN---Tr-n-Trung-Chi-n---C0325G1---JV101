@@ -1,6 +1,5 @@
 package ss10.model;
 
-import java.util.Date;
 
 public class Fruit {
     private String fruitName;

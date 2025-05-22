@@ -4,17 +4,44 @@ import ss10.model.Fruit;
 import ss10.repository.FruitRepository;
 import ss10.repository.IFruitRepository;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class FruitService implements IFruitService{
     private final IFruitRepository repository = new FruitRepository();
+
     @Override
-    public List<Fruit> getAll() {
-        return repository.getAll();
+    public Set<String> getAllKeys() {
+        return repository.getAllKeys();
     }
 
     @Override
-    public void add(Fruit fruit) {
-        repository.add(fruit);
+    public Set<Map.Entry<String, Fruit>> getAllEntries() {
+        return repository.getAllEntries();
+    }
+
+    @Override
+    public void add(String code, Fruit fruit) {
+        repository.add(code, fruit);
+    }
+
+    @Override
+    public void remove(String code) {
+        repository.remove(code);
+    }
+
+    @Override
+    public void containsCode(String code) {
+        repository.containsCode(code);
+    }
+
+    @Override
+    public void update(String code, Fruit fruit) {
+        repository.update(code, fruit);
+    }
+
+    @Override
+    public Fruit getByCode(String code) {
+        return repository.getByCode(code);
     }
 }
