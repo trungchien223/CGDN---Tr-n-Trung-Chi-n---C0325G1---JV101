@@ -26,10 +26,10 @@ public class ExpenditureView {
         return new Expenditure(id,name,date,amount,description);
     }
     public static String deleteExpenditure(){
-        System.out.print("Nhap ma chi tieu can xoa: ");
+        System.out.print("Nhập mã chi tiêu cần xóa: ");
         return scanner.nextLine();
     }
-    public static Expenditure updateExpemditure(){
+    public static Expenditure updateExpenditure(){
         System.out.print("Nhập mã chi tiêu cần sửa: ");
         String id = scanner.nextLine();
         System.out.println("Nhập thông tin mới cho mã chi tiêu: " + id);
@@ -47,8 +47,18 @@ public class ExpenditureView {
         System.out.print("Nhập mã chi tiêu cần tìm: ");
         return scanner.nextLine();
     }
-    public static String searchExpemditureByName(){
+    public static String searchExpenditureByName(){
         System.out.print("Nhập tên cần tìm: ");
         return scanner.nextLine();
     }
+    public static void displayListSort(List<Expenditure> expenditures) {
+        if (expenditures.isEmpty()) {
+            System.out.println("Danh sách trống");
+        } else {
+            for (Expenditure expenditure : expenditures) {
+                System.out.println(expenditure);
+            }
+        }
+    }
+
 }

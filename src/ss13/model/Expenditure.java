@@ -60,10 +60,11 @@ public class Expenditure {
 
     @Override
     public String toString() {
-        return "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", date=" + date +
-                ", expenditureAmount=" + expenditureAmount +
-                ", description='" + description + '\'';
+        return "Chi tiêu:" +
+                " | Mã: '" + id + '\'' +
+                " | Tên: '" + name + '\'' +
+                " | Ngày chi: " + date +
+                " | Số tiền chi: " + expenditureAmount +
+                " | Mô tả: '" + description + '\'';
     }
 }

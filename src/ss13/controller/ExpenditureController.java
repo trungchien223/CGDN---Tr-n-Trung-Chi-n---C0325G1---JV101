@@ -2,6 +2,8 @@ package ss13.controller;
 import ss13.model.Expenditure;
 import ss13.service.ExpenditureService;
 import ss13.service.IExpenditureService;
+import ss13.utils.IdNotFoundException;
+import ss13.utils.UniqueIdException;
 import ss13.view.ExpenditureView;
 
 import java.util.List;
@@ -30,26 +32,30 @@ public class ExpenditureController {
                     ExpenditureView.display(expenditureService.getAll());
                     break;
                 case 2:
-                    Expenditure expenditure = ExpenditureView.addExpenditure();
-                    expenditureService.add(expenditure);
-                    System.out.println("Thêm thành công");
+                    try {
+                        Expenditure expenditure = ExpenditureView.addExpenditure();
+                        expenditureService.add(expenditure);
+                        System.out.println("Thêm thành công");
+                    }catch (UniqueIdException e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 3:
-                    String id = ExpenditureView.deleteExpenditure();
-                    boolean delete = expenditureService.delete(id);
-                    if (delete){
-                        System.out.println("Xoa thanh cong");
-                    }else{
-                        System.out.println("Khong tim thay ma");
+                    try {
+                        String id = ExpenditureView.deleteExpenditure();
+                        expenditureService.delete(id);
+                        System.out.println("Xóa thành công");
+                    } catch (IdNotFoundException e) {
+                        System.out.println(e.getMessage());
                     }
                     break;
                 case 4:
-                    Expenditure expenditure1 = ExpenditureView.updateExpemditure();
+                    Expenditure expenditure1 = ExpenditureView.updateExpenditure();
                     boolean update = expenditureService.update(expenditure1.getId(),expenditure1);
                     if (update){
-                        System.out.println("Sua thanh cong");
+                        System.out.println("Sửa thành công");
                     }else {
-                        System.out.println("Khong tim thay ma");
+                        System.out.println("Không tìm thấy mã");
                     }
                     break;
                 case 5:
@@ -63,8 +69,8 @@ public class ExpenditureController {
                     }
                     break;
                 case 6:
-                    String keyword = ExpenditureView.searchExpemditureByName();
-                    List<Expenditure> result = expenditureService.seachByName(keyword);
+                    String keyword = ExpenditureView.searchExpenditureByName();
+                    List<Expenditure> result = expenditureService.searchByName(keyword);
                     if (!result.isEmpty()) {
                         System.out.println("Đã tìm thấy các tên chi tiêu gần đúng:");
                         for (Expenditure expenditure2 : result) {
@@ -73,6 +79,16 @@ public class ExpenditureController {
                     } else {
                         System.out.println("Không tìm thấy tên chi tiêu phù hợp");
                     }
+                    break;
+                case 7:
+                    List<Expenditure> sortList = expenditureService.sortByName();
+                    System.out.println("Danh sách đã sắp xếp theo tên tăng dần");
+                    ExpenditureView.displayListSort(sortList);
+                    break;
+                case 8:
+                    List<Expenditure> sortList1 = expenditureService.sortByAmount();
+                    System.out.println("Danh sách đã sắp xếp");
+                    ExpenditureView.displayListSort(sortList1);
                     break;
                 case 0:
                     System.out.println("Đã thoát");
