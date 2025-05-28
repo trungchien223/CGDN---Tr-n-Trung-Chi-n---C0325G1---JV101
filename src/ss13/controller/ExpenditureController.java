@@ -2,8 +2,6 @@ package ss13.controller;
 import ss13.model.Expenditure;
 import ss13.service.ExpenditureService;
 import ss13.service.IExpenditureService;
-import ss13.utils.IdNotFoundException;
-import ss13.utils.UniqueIdException;
 import ss13.view.ExpenditureView;
 
 import java.util.List;
@@ -32,21 +30,21 @@ public class ExpenditureController {
                     ExpenditureView.display(expenditureService.getAll());
                     break;
                 case 2:
-                    try {
-                        Expenditure expenditure = ExpenditureView.addExpenditure();
-                        expenditureService.add(expenditure);
+                    Expenditure expenditure = ExpenditureView.addExpenditure();
+                    boolean add = expenditureService.add(expenditure);
+                    if (add){
                         System.out.println("Thêm thành công");
-                    }catch (UniqueIdException e) {
-                        System.out.println(e.getMessage());
+                    }else {
+                        System.out.println("Thêm thất bại");
                     }
                     break;
                 case 3:
-                    try {
-                        String id = ExpenditureView.deleteExpenditure();
-                        expenditureService.delete(id);
+                    String id = ExpenditureView.deleteExpenditure();
+                    boolean delete = expenditureService.delete(id);
+                    if (delete){
                         System.out.println("Xóa thành công");
-                    } catch (IdNotFoundException e) {
-                        System.out.println(e.getMessage());
+                    }else {
+                        System.out.println("Xóa thất bại");
                     }
                     break;
                 case 4:

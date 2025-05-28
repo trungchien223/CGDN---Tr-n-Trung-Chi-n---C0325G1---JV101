@@ -22,24 +22,35 @@ public class ExpenditureRepository implements IExpenditureRepository<Expenditure
     }
 
     @Override
-    public void add(Expenditure expenditure) throws UniqueIdException {
-        for (Expenditure e : expenditures){
-            if (e.getId().equals(expenditure.getId())){
-                throw new UniqueIdException("Mã chi tiêu đã tồn tại: " + expenditure.getId());
+    public boolean add(Expenditure expenditure) {
+        try {
+            for (Expenditure e : expenditures){
+                if (e.getId().equals(expenditure.getId())){
+                    throw new UniqueIdException("Mã chi tiêu đã tồn tại: " + expenditure.getId());
+                }
             }
+            expenditures.add(expenditure);
+            return true;
+        } catch (UniqueIdException e) {
+            System.out.println(e.getMessage());
+            return false;
         }
-        expenditures.add(expenditure);
     }
 
     @Override
-    public void delete(String id) throws IdNotFoundException{
-        for (int i = 0; i < expenditures.size(); i++) {
-            if (expenditures.get(i).getId().equals(id)) {
-                expenditures.remove(i);
-                return;
+    public boolean delete(String id){
+        try {
+            for (int i = 0; i < expenditures.size(); i++) {
+                if (expenditures.get(i).getId().equals(id)) {
+                    expenditures.remove(i);
+                    return true;
+                }
             }
+            throw new IdNotFoundException("Không tìm thấy mã chi tiêu: " + id);
+        } catch (IdNotFoundException e) {
+            System.out.println(e.getMessage());
+            return false;
         }
-        throw new IdNotFoundException("Không tìm thấy mã chi tiêu: " + id);
     }
 
     @Override

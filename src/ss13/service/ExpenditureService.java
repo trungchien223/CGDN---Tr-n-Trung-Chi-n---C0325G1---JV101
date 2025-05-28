@@ -3,9 +3,6 @@ package ss13.service;
 import ss13.model.Expenditure;
 import ss13.repository.ExpenditureRepository;
 import ss13.repository.IExpenditureRepository;
-import ss13.utils.IdNotFoundException;
-import ss13.utils.UniqueIdException;
-
 import java.util.List;
 
 public class ExpenditureService implements IExpenditureService<Expenditure> {
@@ -17,13 +14,13 @@ public class ExpenditureService implements IExpenditureService<Expenditure> {
     }
 
     @Override
-    public void add(Expenditure expenditure) throws UniqueIdException{
-        expenditureRepository.add(expenditure);
+    public boolean add(Expenditure expenditure){
+        return expenditureRepository.add(expenditure);
     }
 
     @Override
-    public void delete(String id) throws IdNotFoundException {
-        expenditureRepository.delete(id);
+    public boolean delete(String id){
+        return expenditureRepository.delete(id);
     }
 
     @Override
