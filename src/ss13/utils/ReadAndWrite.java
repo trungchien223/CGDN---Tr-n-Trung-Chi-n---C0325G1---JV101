@@ -5,31 +5,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ReadAndWrite {
-    public static void writeFileCSV(String pathFile, List<String> stringList, boolean append) {
-        File file = new File(pathFile);
-        try (FileWriter fileWriter = new FileWriter(file, append);
-             BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)) {
-            for (String line : stringList) {
-                bufferedWriter.write(line);
-                bufferedWriter.newLine();
+    public static void writeFile(String path, List<String> lines, boolean append) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(path, append))) {
+            for (String line : lines) {
+                writer.write(line);
+                writer.newLine();
             }
         } catch (IOException e) {
-            System.out.println("Lỗi ghi file");
+            System.out.println("Lỗi ghi file: " + e.getMessage());
         }
     }
 
-    public static List<String> readFileCSV(String pathFile) {
-        List<String> stringList = new ArrayList<>();
-        File file = new File(pathFile);
-        try (FileReader fileReader = new FileReader(file);
-             BufferedReader bufferedReader = new BufferedReader(fileReader)) {
+    public static List<String> readFile(String path) {
+        List<String> lines = new ArrayList<>();
+        try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
             String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringList.add(line);
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
             }
         } catch (IOException e) {
-            System.out.println("Lỗi đọc file");
+            System.out.println("Lỗi đọc file: " + e.getMessage());
         }
-        return stringList;
+        return lines;
     }
 }
