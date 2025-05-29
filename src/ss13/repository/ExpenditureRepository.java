@@ -1,73 +1,70 @@
 package ss13.repository;
 
 import ss13.model.Expenditure;
-import ss13.utils.IdNotFoundException;
-import ss13.utils.UniqueIdException;
-
+import ss13.utils.ReadAndWrite;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class ExpenditureRepository implements IExpenditureRepository<Expenditure>{
-    private static final List<Expenditure> expenditures = new ArrayList<>();
-    static {
-        expenditures.add(new Expenditure("C03", "Mua sam", "01-01-2025", 500000, "Đồ điện tử"));
-        expenditures.add(new Expenditure("C04", "Đi choi", "21-04-2025", 1000000, "Hội An"));
-        expenditures.add(new Expenditure("C05", "An uong", "14-06-2025", 700000, "Đồ ăn Hàn Quốc"));
-    }
+public class ExpenditureRepository implements IExpenditureRepository<Expenditure> {
+    private static final String FILE_PATH = "src/ss13/data/expenditure.csv";
 
     @Override
     public List<Expenditure> findAll() {
+        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
+        List<Expenditure> expenditures = new ArrayList<>();
+        for (String line : lines) {
+            String[] array = line.split(",");
+            expenditures.add(new Expenditure(array[0], array[1], array[2], Double.parseDouble(array[3]), array[4]));
+        }
         return expenditures;
     }
 
     @Override
     public boolean add(Expenditure expenditure) {
-        try {
-            for (Expenditure e : expenditures){
-                if (e.getId().equals(expenditure.getId())){
-                    throw new UniqueIdException("Mã chi tiêu đã tồn tại: " + expenditure.getId());
-                }
-            }
-            expenditures.add(expenditure);
-            return true;
-        } catch (UniqueIdException e) {
-            System.out.println(e.getMessage());
-            return false;
-        }
+        List<String> data = new ArrayList<>();
+        data.add(expenditure.toCSV());
+        ReadAndWrite.writeFile(FILE_PATH, data, true);
+        return true;
     }
 
     @Override
-    public boolean delete(String id){
-        try {
-            for (int i = 0; i < expenditures.size(); i++) {
-                if (expenditures.get(i).getId().equals(id)) {
-                    expenditures.remove(i);
-                    return true;
-                }
+    public boolean delete(String id) {
+        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
+        List<String> newLines = new ArrayList<>();
+        for (String line : lines) {
+            String[] array = line.split(",");
+            if (!array[0].equals(id)) {
+                newLines.add(line);
             }
-            throw new IdNotFoundException("Không tìm thấy mã chi tiêu: " + id);
-        } catch (IdNotFoundException e) {
-            System.out.println(e.getMessage());
-            return false;
         }
+        ReadAndWrite.writeFile(FILE_PATH, newLines, false);
+        return true;
     }
 
     @Override
     public boolean update(String id, Expenditure expenditure) {
-        for (int i = 0; i < expenditures.size(); i++) {
-            if (expenditures.get(i).getId().equals(id)){
-                expenditures.set(i,expenditure);
-                return true;
+        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
+        List<String> newLines = new ArrayList<>();
+        boolean found = false;
+        for (String line : lines) {
+            String[] array = line.split(",");
+            if (array[0].equals(id)) {
+                newLines.add(expenditure.toCSV());
+                found = true;
+            } else {
+                newLines.add(line);
             }
+            ReadAndWrite.writeFile(FILE_PATH, newLines, false);
         }
-        return false;
+        return found;
     }
 
     @Override
     public Expenditure findById(String id) {
-        for(Expenditure expenditure : expenditures){
-            if (expenditure.getId().equals(id)){
+        List<Expenditure> expenditures = findAll();
+        for (Expenditure expenditure : expenditures) {
+            if (expenditure.getId().equals(id)) {
                 return expenditure;
             }
         }
@@ -77,8 +74,9 @@ public class ExpenditureRepository implements IExpenditureRepository<Expenditure
     @Override
     public List<Expenditure> searchByName(String name) {
         List<Expenditure> result = new ArrayList<>();
-        for (Expenditure expenditure : expenditures){
-            if (expenditure.getName().toLowerCase().contains(name.toLowerCase())){
+        List<Expenditure> expenditures = findAll();
+        for (Expenditure expenditure : expenditures) {
+            if (expenditure.getName().toLowerCase().contains(name.toLowerCase())) {
                 result.add(expenditure);
             }
         }
@@ -87,8 +85,7 @@ public class ExpenditureRepository implements IExpenditureRepository<Expenditure
 
     @Override
     public List<Expenditure> sortByName() {
-        List<Expenditure> sortList = new ArrayList<>(expenditures);
-
+        List<Expenditure> sortList = new ArrayList<>(findAll());
         sortList.sort(new Comparator<Expenditure>() {
             @Override
             public int compare(Expenditure o1, Expenditure o2) {
@@ -100,12 +97,12 @@ public class ExpenditureRepository implements IExpenditureRepository<Expenditure
 
     @Override
     public List<Expenditure> sortByAmount() {
-        List<Expenditure> sortList = new ArrayList<>(expenditures);
+        List<Expenditure> sortList = new ArrayList<>(findAll());
         sortList.sort(new Comparator<Expenditure>() {
             @Override
             public int compare(Expenditure o1, Expenditure o2) {
-                int reduce = Double.compare(o2.getExpenditureAmount(),o1.getExpenditureAmount());
-                if (reduce!=0){
+                int reduce = Double.compare(o2.getExpenditureAmount(), o1.getExpenditureAmount());
+                if (reduce != 0) {
                     return reduce;
                 }
                 return o1.getName().compareToIgnoreCase(o2.getName());

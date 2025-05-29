@@ -57,6 +57,9 @@ public class Expenditure {
     public void setDescription(String description) {
         this.description = description;
     }
+    public String toCSV() {
+        return id + "," + name + "," + date + "," + expenditureAmount + "," + description;
+    }
 
     @Override
     public String toString() {
