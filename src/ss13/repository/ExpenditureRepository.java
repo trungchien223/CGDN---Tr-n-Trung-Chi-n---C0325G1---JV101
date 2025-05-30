@@ -7,55 +7,97 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ExpenditureRepository implements IExpenditureRepository<Expenditure> {
-    private static final String FILE_PATH = "src/ss13/data/expenditure.csv";
+//    private static final String FILE_PATH = "src/ss13/data/expenditure.csv";
+
+//    @Override
+//    public List<Expenditure> findAll() {
+//        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
+//        List<Expenditure> expenditures = new ArrayList<>();
+//        for (String line : lines) {
+//            String[] array = line.split(",");
+//            expenditures.add(new Expenditure(array[0], array[1], array[2], Double.parseDouble(array[3]), array[4]));
+//        }
+//        return expenditures;
+//    }
+//
+//    @Override
+//    public boolean add(Expenditure expenditure) {
+//        List<String> data = new ArrayList<>();
+//        data.add(expenditure.toCSV());
+//        ReadAndWrite.writeFile(FILE_PATH, data, true);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean delete(String id) {
+//        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
+//        List<String> newLines = new ArrayList<>();
+//        for (String line : lines) {
+//            String[] array = line.split(",");
+//            if (!array[0].equals(id)) {
+//                newLines.add(line);
+//            }
+//        }
+//        ReadAndWrite.writeFile(FILE_PATH, newLines, false);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean update(String id, Expenditure expenditure) {
+//        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
+//        List<String> newLines = new ArrayList<>();
+//        boolean found = false;
+//        for (String line : lines) {
+//            String[] array = line.split(",");
+//            if (array[0].equals(id)) {
+//                newLines.add(expenditure.toCSV());
+//                found = true;
+//            } else {
+//                newLines.add(line);
+//            }
+//            ReadAndWrite.writeFile(FILE_PATH, newLines, false);
+//        }
+//        return found;
+//    }
+
+    private static final String FILE_PATH = "src/ss13/data/expenditure.dat";
 
     @Override
     public List<Expenditure> findAll() {
-        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
-        List<Expenditure> expenditures = new ArrayList<>();
-        for (String line : lines) {
-            String[] array = line.split(",");
-            expenditures.add(new Expenditure(array[0], array[1], array[2], Double.parseDouble(array[3]), array[4]));
-        }
-        return expenditures;
+        return ReadAndWrite.readFileToBinary(FILE_PATH);
     }
 
     @Override
     public boolean add(Expenditure expenditure) {
-        List<String> data = new ArrayList<>();
-        data.add(expenditure.toCSV());
-        ReadAndWrite.writeFile(FILE_PATH, data, true);
+        List<Expenditure> expenditures = ReadAndWrite.readFileToBinary(FILE_PATH);
+        expenditures.add(expenditure);
+        ReadAndWrite.writeFileToBinary(FILE_PATH, expenditures);
         return true;
     }
 
     @Override
     public boolean delete(String id) {
-        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
-        List<String> newLines = new ArrayList<>();
-        for (String line : lines) {
-            String[] array = line.split(",");
-            if (!array[0].equals(id)) {
-                newLines.add(line);
-            }
+        List<Expenditure> expenditures = ReadAndWrite.readFileToBinary(FILE_PATH);
+        boolean removed = expenditures.removeIf(e -> e.getId().equals(id));
+        if (removed) {
+            ReadAndWrite.writeFileToBinary(FILE_PATH, expenditures);
         }
-        ReadAndWrite.writeFile(FILE_PATH, newLines, false);
-        return true;
+        return removed;
     }
 
     @Override
     public boolean update(String id, Expenditure expenditure) {
-        List<String> lines = ReadAndWrite.readFile(FILE_PATH);
-        List<String> newLines = new ArrayList<>();
+        List<Expenditure> expenditures = ReadAndWrite.readFileToBinary(FILE_PATH);
         boolean found = false;
-        for (String line : lines) {
-            String[] array = line.split(",");
-            if (array[0].equals(id)) {
-                newLines.add(expenditure.toCSV());
+        for (int i = 0; i < expenditures.size(); i++) {
+            if (expenditures.get(i).getId().equals(id)) {
+                expenditures.set(i, expenditure);
                 found = true;
-            } else {
-                newLines.add(line);
+                break;
             }
-            ReadAndWrite.writeFile(FILE_PATH, newLines, false);
+        }
+        if (found) {
+            ReadAndWrite.writeFileToBinary(FILE_PATH, expenditures);
         }
         return found;
     }
@@ -110,4 +152,5 @@ public class ExpenditureRepository implements IExpenditureRepository<Expenditure
         });
         return sortList;
     }
+
 }

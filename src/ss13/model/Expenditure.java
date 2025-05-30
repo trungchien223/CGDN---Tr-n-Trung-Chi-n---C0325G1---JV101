@@ -1,6 +1,9 @@
 package ss13.model;
 
-public class Expenditure {
+import java.io.Serializable;
+
+public class Expenditure implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String id;
     private String name;
     private String date;
