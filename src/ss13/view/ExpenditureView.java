@@ -14,16 +14,7 @@ public class ExpenditureView {
             System.out.println(e);
         }
     }
-    public static Expenditure addExpenditure() {
-        String id;
-        do {
-            System.out.print("Nhập mã chi tiêu (CT-xxxx): ");
-            id = scanner.nextLine();
-            if (!ValidateExpenditure.isValidateId(id)) {
-                System.out.println("Sai định dạng, Mã phải theo định dạng CT-xxxx.");
-            }
-        } while (!ValidateExpenditure.isValidateId(id));
-
+    public static Expenditure expenditureInfo(String id){
         String name;
         do {
             System.out.print("Nhập tên chi tiêu: ");
@@ -62,54 +53,31 @@ public class ExpenditureView {
 
         return new Expenditure(id, name, date, amount, description);
     }
+    public static Expenditure addExpenditure() {
+        String id;
+        do {
+            System.out.print("Nhập mã chi tiêu (CT-xxxx): ");
+            id = scanner.nextLine();
+            if (!ValidateExpenditure.isValidateId(id)) {
+                System.out.println("Sai định dạng, Mã phải theo định dạng CT-xxxx.");
+            }
+        } while (!ValidateExpenditure.isValidateId(id));
+
+        return expenditureInfo(id);
+    }
 
     public static String deleteExpenditure() {
         System.out.print("Nhập mã chi tiêu cần xóa: ");
         return scanner.nextLine();
     }
-
-    public static Expenditure updateExpenditure() {
+    public static String getExpenditureIdForUpdate() {
         System.out.print("Nhập mã chi tiêu cần sửa: ");
-        String id = scanner.nextLine();
+        return scanner.nextLine();
+    }
+
+    public static Expenditure updateExpenditure(String id) {
         System.out.println("Nhập thông tin mới cho mã chi tiêu: " + id);
-
-        String name;
-        do {
-            System.out.print("Tên chi tiêu mới: ");
-            name = scanner.nextLine();
-            if (!ValidateExpenditure.isValidateName(name)) {
-                System.out.println("Tên chỉ được chứa chữ cái và khoảng trắng");
-            }
-        } while (!ValidateExpenditure.isValidateName(name));
-
-        String date;
-        do {
-            System.out.print("Ngày chi mới (dd/MM/yyyy): ");
-            date = scanner.nextLine();
-            if (!ValidateExpenditure.isValidateDate(date)) {
-                System.out.println("Sai định dạng");
-            }
-        } while (!ValidateExpenditure.isValidateDate(date));
-
-        double amount = 0;
-        while (true) {
-            try {
-                System.out.print("Số tiền chi mới: ");
-                amount = Double.parseDouble(scanner.nextLine());
-                if (!ValidateExpenditure.isValidateAmount(amount)) {
-                    System.out.println("Số tiền phải lớn hơn 0 và nhỏ hơn 100 trịu");
-                } else{
-                    break;
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Vui lòng nhập số");
-            }
-        }
-
-        System.out.print("Mô tả mới: ");
-        String description = scanner.nextLine();
-
-        return new Expenditure(id, name, date, amount, description);
+        return expenditureInfo(id);
     }
 
     public static String searchExpenditureById() {

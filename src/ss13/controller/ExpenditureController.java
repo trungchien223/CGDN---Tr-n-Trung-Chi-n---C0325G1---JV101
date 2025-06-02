@@ -48,12 +48,22 @@ public class ExpenditureController {
                     }
                     break;
                 case 4:
-                    Expenditure expenditure1 = ExpenditureView.updateExpenditure();
-                    boolean update = expenditureService.update(expenditure1.getId(),expenditure1);
-                    if (update){
+                    String updateId;
+                    Expenditure existingExpenditure;
+                    do {
+                        updateId = ExpenditureView.getExpenditureIdForUpdate();
+                        existingExpenditure = expenditureService.findById(updateId);
+
+                        if (existingExpenditure == null) {
+                            System.out.println("Không tìm thấy mã chi tiêu: " + updateId);
+                        }
+                    } while (existingExpenditure == null);
+
+                    Expenditure updatedExpenditure = ExpenditureView.updateExpenditure(updateId);
+
+                    boolean update = expenditureService.update(updateId, updatedExpenditure);
+                    if (update) {
                         System.out.println("Sửa thành công");
-                    }else {
-                        System.out.println("Không tìm thấy mã");
                     }
                     break;
                 case 5:
