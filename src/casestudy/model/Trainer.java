@@ -5,6 +5,22 @@ public class Trainer {
     private String name;
     private String specialty;
     private String phone;
+    private int age;
+    private String gender;
+    private int experience;
+
+    public Trainer() {
+    }
+
+    public Trainer(String id, String name, String specialty, String phone, int age, String gender, int experience) {
+        this.id = id;
+        this.name = name;
+        this.specialty = specialty;
+        this.phone = phone;
+        this.age = age;
+        this.gender = gender;
+        this.experience = experience;
+    }
 
     public String getId() {
         return id;
@@ -38,14 +54,28 @@ public class Trainer {
         this.phone = phone;
     }
 
-    public Trainer() {
+    public int getAge() {
+        return age;
     }
 
-    public Trainer(String id, String name, String specialty, String phone) {
-        this.id = id;
-        this.name = name;
-        this.specialty = specialty;
-        this.phone = phone;
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public int getExperience() {
+        return experience;
+    }
+
+    public void setExperience(int experience) {
+        this.experience = experience;
     }
 
     @Override
@@ -55,6 +85,9 @@ public class Trainer {
                 ", name='" + name + '\'' +
                 ", specialty='" + specialty + '\'' +
                 ", phone='" + phone + '\'' +
+                ", age=" + age +
+                ", gender='" + gender + '\'' +
+                ", experience=" + experience +
                 '}';
     }
 }
