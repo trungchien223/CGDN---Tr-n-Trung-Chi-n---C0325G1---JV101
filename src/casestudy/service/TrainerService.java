@@ -1,24 +1,22 @@
-package casestudy.repository;
+package casestudy.service;
 
 import casestudy.model.Trainer;
+import casestudy.repository.ITrainerRepository;
+import casestudy.repository.TrainerRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TrainerRepository implements ITrainerRepository{
-    private static final List<Trainer> trainerList = new ArrayList<>();
+public class TrainerService implements ITrainerService{
+    private final ITrainerRepository trainerRepository = new TrainerRepository();
 
     @Override
     public List<Trainer> findAll() {
-        return new ArrayList<>(trainerList);
+        return trainerRepository.findAll();
     }
 
     @Override
     public boolean add(Trainer trainer) {
-        if (findById(trainer.getId()) != null) {
-            return false;
-        }
-        return trainerList.add(trainer);
+        return trainerRepository.add(trainer);
     }
 
     @Override

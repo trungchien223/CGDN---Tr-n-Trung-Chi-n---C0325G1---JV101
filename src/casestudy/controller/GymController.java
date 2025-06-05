@@ -4,8 +4,6 @@ import java.util.Scanner;
 
 public class GymController {
     private static final Scanner scanner = new Scanner(System.in);
-    private static final MemberController memberController = new MemberController();
-    private static final TrainerController trainerController = new TrainerController();
 
     public static void main(String[] args) {
         int choice;

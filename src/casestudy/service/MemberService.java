@@ -1,24 +1,22 @@
-package casestudy.repository;
+package casestudy.service;
 
 import casestudy.model.Member;
+import casestudy.repository.IMemberRepository;
+import casestudy.repository.MemberRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MemberRepository implements IMemberRepository{
-    private static final List<Member> memberList = new ArrayList<>();
+public class MemberService implements IMemberService{
+    private final IMemberRepository memberRepository = new MemberRepository();
 
     @Override
     public List<Member> findAll() {
-        return new ArrayList<>(memberList);
+        return memberRepository.findAll();
     }
 
     @Override
     public boolean add(Member member) {
-        if (findById(member.getId())!= null){
-            return false;
-        }
-        return memberList.add(member);
+        return memberRepository.add(member);
     }
 
     @Override

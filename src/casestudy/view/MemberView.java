@@ -1,9 +1,9 @@
-package casestudy.controller;
+package casestudy.view;
 
 import java.util.Scanner;
 
-public class MemberController {
-    private static final Scanner scanner = new Scanner(System.in);
+public class MemberView {
+    private final Scanner scanner = new Scanner(System.in);
     public void showMenu(){
         int choice;
         do {
