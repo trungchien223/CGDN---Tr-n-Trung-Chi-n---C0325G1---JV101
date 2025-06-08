@@ -21,16 +21,16 @@ public class TrainerService implements ITrainerService{
 
     @Override
     public boolean delete(String id) {
-        return false;
+        return trainerRepository.delete(id);
     }
 
     @Override
     public boolean update(String id, Trainer trainer) {
-        return false;
+        return trainerRepository.update(id, trainer);
     }
 
     @Override
     public Trainer findById(String id) {
-        return null;
+        return trainerRepository.findById(id);
     }
 }

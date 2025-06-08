@@ -21,16 +21,16 @@ public class MemberService implements IMemberService{
 
     @Override
     public boolean delete(String id) {
-        return false;
+        return memberRepository.delete(id);
     }
 
     @Override
     public boolean update(String id, Member member) {
-        return false;
+        return memberRepository.update(id, member);
     }
 
     @Override
     public Member findById(String id) {
-        return null;
+        return memberRepository.findById(id);
     }
 }

@@ -23,16 +23,36 @@ public class MemberRepository implements IMemberRepository{
 
     @Override
     public boolean delete(String id) {
+        Member member  = findById(id);
+        if (member != null){
+            return memberList.remove(member);
+        }
         return false;
     }
 
     @Override
     public boolean update(String id, Member member) {
+        int index = -1;
+        for (int i = 0; i < memberList.size(); i++) {
+            if (memberList.get(i).getId().equals(id)) {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1) {
+            memberList.set(index, member);
+            return true;
+        }
         return false;
     }
 
     @Override
     public Member findById(String id) {
+        for (Member member : memberList) {
+            if (member.getId().equals(id)) {
+                return member;
+            }
+        }
         return null;
     }
 }

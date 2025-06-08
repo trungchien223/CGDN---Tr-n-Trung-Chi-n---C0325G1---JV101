@@ -23,11 +23,27 @@ public class TrainerRepository implements ITrainerRepository{
 
     @Override
     public boolean delete(String id) {
+        Trainer trainer = findById(id);
+        if (trainer != null) {
+            return trainerList.remove(trainer);
+        }
         return false;
     }
 
     @Override
     public boolean update(String id, Trainer trainer) {
+        int index = -1;
+        for (int i = 0; i < trainerList.size(); i++) {
+            if (trainerList.get(i).getId().equals(id)) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index != -1) {
+            trainerList.set(index, trainer);
+            return true;
+        }
         return false;
     }
 
