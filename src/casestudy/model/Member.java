@@ -51,6 +51,10 @@ public class Member extends Person{
     public void setTrainerId(String trainerId) {
         this.trainerId = trainerId;
     }
+    public String toCSV() {
+        return getId() + "," + getName() + "," + getDateOfBirth() + "," + getGender() + "," +
+                getPhone() + "," + getMembershipType() + "," + getStartDate() + "," + getTrainerId();
+    }
 
     @Override
     public String toString() {

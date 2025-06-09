@@ -1,61 +1,80 @@
 package casestudy.repository;
 
 import casestudy.model.Member;
+import casestudy.utils.ReadAndWriteFile;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemberRepository implements IMemberRepository{
-    private static final List<Member> memberList = new ArrayList<>();
-    static {
-        memberList.add(new Member("M1", "Tam", LocalDate.of(1995, 5, 15), "Nam", "0901234567",
-                "Gói 3 tháng", LocalDate.of(2023, 10, 1), "T1"));
-        memberList.add(new Member("M2", "Chien", LocalDate.of(1998, 8, 22), "Nam", "0912345678",
-                "Gói 6 tháng", LocalDate.of(2023, 11, 15), "T2"));
-    }
+    private static final String FILE_PATH = "src/casestudy/data/member.csv";
 
     @Override
     public List<Member> findAll() {
-        return new ArrayList<>(memberList);
+        List<String> lines = ReadAndWriteFile.readFile(FILE_PATH);
+        List<Member> members = new ArrayList<>();
+        for (String line : lines) {
+            String[] array = line.split(",");
+            if (array.length >= 8) {
+                Member member = new Member(
+                        array[0],
+                        array[1],
+                        LocalDate.parse(array[2]),
+                        array[3],
+                        array[4],
+                        array[5],
+                        LocalDate.parse(array[6]),
+                        array[7]
+                );
+                members.add(member);
+            }
+        }
+        return members;
     }
 
     @Override
     public boolean add(Member member) {
-        if (findById(member.getId())!= null){
-            return false;
-        }
-        return memberList.add(member);
+        List<String> lines = new ArrayList<>();
+        lines.add(member.toCSV());
+        ReadAndWriteFile.writeFile(FILE_PATH, lines, true);
+        return true;
     }
 
     @Override
     public boolean delete(String id) {
-        Member member  = findById(id);
-        if (member != null){
-            return memberList.remove(member);
+        List<Member> members = findAll();
+        List<String> newLines = new ArrayList<>();
+        for (Member member : members) {
+            if (!member.getId().equals(id)) {
+                newLines.add(member.toCSV());
+            }
         }
-        return false;
+        ReadAndWriteFile.writeFile(FILE_PATH, newLines, false);
+        return true;
     }
 
     @Override
     public boolean update(String id, Member member) {
-        int index = -1;
-        for (int i = 0; i < memberList.size(); i++) {
-            if (memberList.get(i).getId().equals(id)) {
-                index = i;
-                break;
+        List<Member> members = findAll();
+        List<String> newLines = new ArrayList<>();
+        boolean found = false;
+        for (Member m : members) {
+            if (m.getId().equals(id)) {
+                newLines.add(member.toCSV());
+                found = true;
+            } else {
+                newLines.add(m.toCSV());
             }
         }
-        if (index != -1) {
-            memberList.set(index, member);
-            return true;
-        }
-        return false;
+        ReadAndWriteFile.writeFile(FILE_PATH, newLines, false);
+        return found;
     }
 
     @Override
     public Member findById(String id) {
-        for (Member member : memberList) {
+        List<Member> members = findAll();
+        for (Member member : members) {
             if (member.getId().equals(id)) {
                 return member;
             }

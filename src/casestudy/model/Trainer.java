@@ -38,6 +38,10 @@ public class Trainer extends Person{
     public void setExperience(int experience) {
         this.experience = experience;
     }
+    public String toCSV() {
+        return getId() + "," + getName() + "," + getSpecialty() + "," + getPhone() + "," +
+                getAge() + "," + getGender() + "," + getExperience();
+    }
 
     @Override
     public String toString() {
