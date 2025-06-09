@@ -2,11 +2,18 @@ package casestudy.repository;
 
 import casestudy.model.Member;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemberRepository implements IMemberRepository{
     private static final List<Member> memberList = new ArrayList<>();
+    static {
+        memberList.add(new Member("M1", "Tam", LocalDate.of(1995, 5, 15), "Nam", "0901234567",
+                "Gói 3 tháng", LocalDate.of(2023, 10, 1), "T1"));
+        memberList.add(new Member("M2", "Chien", LocalDate.of(1998, 8, 22), "Nam", "0912345678",
+                "Gói 6 tháng", LocalDate.of(2023, 11, 15), "T2"));
+    }
 
     @Override
     public List<Member> findAll() {

@@ -30,8 +30,10 @@ public class GymController {
                     trainerView.showMenu();
                     break;
                 case 3:
+                    memberView.assignTrainer();
                     break;
                 case 4:
+                    memberView.searchMemberById();
                     break;
                 case 5:
                     break;

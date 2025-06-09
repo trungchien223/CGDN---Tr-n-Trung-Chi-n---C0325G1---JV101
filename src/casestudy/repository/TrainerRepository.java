@@ -7,6 +7,10 @@ import java.util.List;
 
 public class TrainerRepository implements ITrainerRepository{
     private static final List<Trainer> trainerList = new ArrayList<>();
+    static {
+        trainerList.add(new Trainer("T1", "Vinh", "Yoga", "0987654321", 28, "Nam", 5));
+        trainerList.add(new Trainer("T2", "Nam", "Cardio", "0976543210", 32, "Nam", 7));
+    }
 
     @Override
     public List<Trainer> findAll() {
@@ -49,6 +53,11 @@ public class TrainerRepository implements ITrainerRepository{
 
     @Override
     public Trainer findById(String id) {
+        for (Trainer trainer : trainerList) {
+            if (trainer.getId().equals(id)) {
+                return trainer;
+            }
+        }
         return null;
     }
 }

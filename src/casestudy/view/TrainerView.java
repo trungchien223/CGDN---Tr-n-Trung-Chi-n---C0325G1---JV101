@@ -80,11 +80,19 @@ public class TrainerView {
         System.out.print("Tên mới: ");
         String name = scanner.nextLine();
         trainer.setName(name);
+        System.out.print("Chuyên môn mới: ");
+        trainer.setSpecialty(scanner.nextLine());
         System.out.print("Số điện thoại mới: ");
         String phone = scanner.nextLine();
         trainer.setPhone(phone);
+        System.out.print("Tuổi mới: ");
+        trainer.setAge(Integer.parseInt(scanner.nextLine()));
+        System.out.print("Giới tính mới: ");
+        trainer.setGender(scanner.nextLine());
+        System.out.print("Số năm kinh nghiệm mới: ");
+        trainer.setExperience(Integer.parseInt(scanner.nextLine()));
         trainerService.update(id, trainer);
-        System.out.println("Đã cập nhật HLV");
+        System.out.println("Đã cập nhật lại thông tin HLV");
     }
     private void deleteTrainer() {
         System.out.print("Nhập ID HLV cần xóa: ");
