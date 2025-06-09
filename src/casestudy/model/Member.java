@@ -58,11 +58,11 @@ public class Member extends Person{
 
     @Override
     public String toString() {
-        return "Member{" + super.toString() +
-                ", dateOfBirth=" + dateOfBirth +
-                ", membershipType='" + membershipType + '\'' +
-                ", startDate=" + startDate +
-                ", trainerId='" + trainerId + '\'' +
-                '}';
+        return "Thành viên:" +
+                " | " + super.toString() +
+                " | Ngày sinh: " + dateOfBirth +
+                " | Gói tập: '" + membershipType + '\'' +
+                " | Ngày bắt đầu: " + startDate +
+                " | Mã HLV: '" + trainerId + '\'';
     }
 }

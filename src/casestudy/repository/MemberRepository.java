@@ -45,13 +45,21 @@ public class MemberRepository implements IMemberRepository{
     public boolean delete(String id) {
         List<Member> members = findAll();
         List<String> newLines = new ArrayList<>();
+        boolean isDeleted = false;
+
         for (Member member : members) {
             if (!member.getId().equals(id)) {
                 newLines.add(member.toCSV());
+            } else {
+                isDeleted = true;
             }
         }
-        ReadAndWriteFile.writeFile(FILE_PATH, newLines, false);
-        return true;
+
+        if (isDeleted) {
+            ReadAndWriteFile.writeFile(FILE_PATH, newLines, false);
+        }
+
+        return isDeleted;
     }
 
     @Override

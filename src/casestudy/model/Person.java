@@ -50,9 +50,9 @@ public abstract class Person {
 
     @Override
     public String toString() {
-        return "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", phone='" + phone + '\'' +
-                ", gender='" + gender + '\'';
+        return "ID: '" + id + '\'' +
+                " | Tên: '" + name + '\'' +
+                " | SĐT: '" + phone + '\'' +
+                " | Giới tính: '" + gender + '\'';
     }
 }

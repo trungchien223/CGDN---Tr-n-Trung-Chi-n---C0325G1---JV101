@@ -45,10 +45,10 @@ public class Trainer extends Person{
 
     @Override
     public String toString() {
-        return "Trainer{" + super.toString() +
-                ", specialty='" + specialty + '\'' +
-                ", age=" + age +
-                ", experience=" + experience +
-                '}';
+        return "Huấn luyện viên:" +
+                " | " + super.toString() +
+                " | Chuyên môn: '" + specialty + '\'' +
+                " | Tuổi: " + age +
+                " | Kinh nghiệm: " + experience + " năm";
     }
 }

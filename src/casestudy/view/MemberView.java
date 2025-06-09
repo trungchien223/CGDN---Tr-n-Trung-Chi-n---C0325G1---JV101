@@ -101,13 +101,26 @@ public class MemberView {
         System.out.println("Đã cập nhật lại thông tin hội viên");
     }
     private void deleteMember() {
-        System.out.print("Nhập ID hội viên cần xóa: ");
+        System.out.print("Nhập ID thành viên cần xóa: ");
         String id = scanner.nextLine();
-        boolean removed = memberService.delete(id);
-        if (removed) {
-            System.out.println("Xóa thành công");
+
+        Member member = memberService.findById(id);
+        if (member == null) {
+            System.out.println("Không tìm thấy thành viên với ID: " + id);
+            return;
+        }
+        System.out.print("Bạn có chắc muốn xóa thành viên này? (y/n): ");
+        String confirm = scanner.nextLine().trim().toLowerCase();
+
+        if (confirm.equals("y")) {
+            boolean result = memberService.delete(id);
+            if (result) {
+                System.out.println("Xóa thành công");
+            } else {
+                System.out.println("Xóa thất bại");
+            }
         } else {
-            System.out.println("Không tìm thấy hội viên");
+            System.out.println("Đã hủy xóa");
         }
     }
     public void assignTrainer() {
