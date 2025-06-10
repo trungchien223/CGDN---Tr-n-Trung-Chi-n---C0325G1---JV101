@@ -1,20 +1,17 @@
 package casestudy.view;
 
+import casestudy.controller.MemberController;
 import casestudy.model.Member;
 import casestudy.model.Trainer;
-import casestudy.service.IMemberService;
-import casestudy.service.ITrainerService;
-import casestudy.service.MemberService;
-import casestudy.service.TrainerService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
 public class MemberView {
     private final Scanner scanner = new Scanner(System.in);
-    private final IMemberService memberService = new MemberService();
-    private final ITrainerService trainerService = new TrainerService();
+    private final MemberController memberController = new MemberController();
 
     public void showMenu() {
         int choice;
@@ -47,7 +44,7 @@ public class MemberView {
     }
 
     private void displayAllMembers() {
-        List<Member> members = memberService.findAll();
+        List<Member> members = memberController.getAllMembers();
         if (members.isEmpty()) {
             System.out.println("Không có hội viên nào");
         } else {
@@ -56,55 +53,89 @@ public class MemberView {
             }
         }
     }
-    private void addMember(){
-        System.out.print("ID: ");
-        String id = scanner.nextLine();
-        System.out.print("Tên: ");
-        String name = scanner.nextLine();
-        System.out.print("Ngày sinh: ");
-        LocalDate dob = LocalDate.parse(scanner.nextLine());
-        System.out.print("Giới tính: ");
-        String gender = scanner.nextLine();
-        System.out.print("Số điện thoại: ");
-        String phone = scanner.nextLine();
-        System.out.print("Gói tập: ");
-        String type = scanner.nextLine();
-        System.out.print("Ngày bắt đầu: ");
-        LocalDate start = LocalDate.parse(scanner.nextLine());
-        Member member = new Member(id, name, dob, gender, phone, type, start, null);
-        memberService.add(member);
-        System.out.println("Đã thêm hội viên");
+
+    private void addMember() {
+        try {
+            System.out.print("ID: ");
+            String id = scanner.nextLine();
+            System.out.print("Tên: ");
+            String name = scanner.nextLine();
+
+            System.out.print("Ngày sinh (yyyy-MM-dd): ");
+            LocalDate dob = LocalDate.parse(scanner.nextLine());
+
+            System.out.print("Giới tính: ");
+            String gender = scanner.nextLine();
+
+            System.out.print("Số điện thoại: ");
+            String phone = scanner.nextLine();
+
+            System.out.print("Gói tập: ");
+            String type = scanner.nextLine();
+
+            System.out.print("Ngày bắt đầu (yyyy-MM-dd): ");
+            LocalDate start = LocalDate.parse(scanner.nextLine());
+
+            Member member = new Member(id, name, dob, gender, phone, type, start, null);
+            boolean result = memberController.addMember(member);
+            if (result) {
+                System.out.println("Đã thêm hội viên thành công");
+            } else {
+                System.out.println("Thêm hội viên thất bại");
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Sai định dạng. Vui lòng nhập theo yyyy-MM-dd.");
+        } catch (Exception e) {
+            System.out.println("Lỗi" + e.getMessage());
+        }
     }
+
+
     private void updateMember() {
         System.out.print("Nhập ID hội viên cần sửa: ");
         String id = scanner.nextLine();
-        Member member = memberService.findById(id);
+        Member member = memberController.findMemberById(id);
         if (member == null) {
             System.out.println("Không tìm thấy hội viên");
             return;
         }
-        System.out.print("Tên mới: ");
-        String name = scanner.nextLine();
-        member.setName(name);
-        System.out.print("Số điện thoại mới: ");
-        String phone = scanner.nextLine();
-        member.setPhone(phone);
-        System.out.print("Giới tính mới: ");
-        member.setGender(scanner.nextLine());
-        System.out.print("Ngày sinh mới: ");
-        member.setDateOfBirth(LocalDate.parse(scanner.nextLine()));
-        System.out.print("Loại gói tập mới: ");
-        member.setMembershipType(scanner.nextLine());
-        System.out.print("Ngày bắt đầu mới: ");
-        member.setStartDate(LocalDate.parse(scanner.nextLine()));
-        memberService.update(id, member);
-        System.out.println("Đã cập nhật lại thông tin hội viên");
+        try {
+            System.out.print("Tên mới: ");
+            member.setName(scanner.nextLine());
+
+            System.out.print("Số điện thoại mới: ");
+            member.setPhone(scanner.nextLine());
+
+            System.out.print("Giới tính mới: ");
+            member.setGender(scanner.nextLine());
+
+            System.out.print("Ngày sinh mới (yyyy-MM-dd): ");
+            member.setDateOfBirth(LocalDate.parse(scanner.nextLine()));
+
+            System.out.print("Loại gói tập mới: ");
+            member.setMembershipType(scanner.nextLine());
+
+            System.out.print("Ngày bắt đầu mới (yyyy-MM-dd): ");
+            member.setStartDate(LocalDate.parse(scanner.nextLine()));
+
+            boolean result = memberController.updateMember(id, member);
+            if (result) {
+                System.out.println("Đã cập nhật hội viên thành công");
+            } else {
+                System.out.println("Cập nhật thất bại");
+            }
+        } catch (DateTimeParseException e) {
+            System.out.println("Sai định dạng. Vui lòng nhập theo yyyy-MM-dd.");
+        } catch (Exception e) {
+            System.out.println("Lỗi " + e.getMessage());
+        }
     }
+
     private void deleteMember() {
         System.out.print("Nhập ID thành viên cần xóa: ");
         String id = scanner.nextLine();
 
-        Member member = memberService.findById(id);
+        Member member = memberController.findMemberById(id);
         if (member == null) {
             System.out.println("Không tìm thấy thành viên với ID: " + id);
             return;
@@ -113,7 +144,7 @@ public class MemberView {
         String confirm = scanner.nextLine().trim().toLowerCase();
 
         if (confirm.equals("y")) {
-            boolean result = memberService.delete(id);
+            boolean result = memberController.deleteMember(id);
             if (result) {
                 System.out.println("Xóa thành công");
             } else {
@@ -123,8 +154,9 @@ public class MemberView {
             System.out.println("Đã hủy xóa");
         }
     }
+
     public void assignTrainer() {
-        List<Member> members = memberService.findAll();
+        List<Member> members = memberController.getAllMembers();
         if (members.isEmpty()) {
             System.out.println("Không có hội viên nào");
             return;
@@ -136,12 +168,13 @@ public class MemberView {
 
         System.out.print("Nhập ID hội viên cần gán: ");
         String memberId = scanner.nextLine();
-        Member member = memberService.findById(memberId);
+        Member member = memberController.findMemberById(memberId);
         if (member == null) {
             System.out.println("Không tìm thấy hội viên");
             return;
         }
-        List<Trainer> trainers = trainerService.findAll();
+
+        List<Trainer> trainers = memberController.getAllTrainers();
         if (trainers.isEmpty()) {
             System.out.println("Không có huấn luyện viên nào");
             return;
@@ -152,19 +185,27 @@ public class MemberView {
         }
         System.out.print("Nhập ID huấn luyện viên: ");
         String trainerId = scanner.nextLine();
-        Trainer trainer = trainerService.findById(trainerId);
+        Trainer trainer = null;
+        for (Trainer t : memberController.getAllTrainers()) {
+            if (t.getId().equals(trainerId)) {
+                trainer = t;
+                break;
+            }
+        }
+
         if (trainer == null) {
             System.out.println("Không tìm thấy huấn luyện viên");
             return;
         }
         member.setTrainerId(trainerId);
-        memberService.update(memberId, member);
+        memberController.assignTrainerToMember(memberId, trainerId);
         System.out.println("Đã gán HLV " + trainer.getName() + " cho hội viên " + member.getName());
+
     }
     public void searchMemberById() {
         System.out.print("Nhập ID hội viên cần tìm: ");
         String id = scanner.nextLine();
-        Member member = memberService.findById(id);
+        Member member = memberController.findMemberById(id);
         if (member == null) {
             System.out.println("Không tìm thấy hội viên có ID: " + id);
         } else {
