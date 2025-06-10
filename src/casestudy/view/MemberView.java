@@ -3,6 +3,7 @@ package casestudy.view;
 import casestudy.controller.MemberController;
 import casestudy.model.Member;
 import casestudy.model.Trainer;
+import casestudy.utils.ValidateMember;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -56,40 +57,64 @@ public class MemberView {
 
     private void addMember() {
         try {
-            System.out.print("ID: ");
+            System.out.print("ID (MBxxx): ");
             String id = scanner.nextLine();
+            if (!ValidateMember.isValidId(id)) {
+                System.out.println("ID không hợp lệ. Phải theo định dạng MBxxx.");
+                return;
+            }
+
             System.out.print("Tên: ");
             String name = scanner.nextLine();
+            if (!ValidateMember.isValidName(name)) {
+                System.out.println("Tên không hợp lệ. Viết hoa chữ cái đầu và không chứa số.");
+                return;
+            }
 
             System.out.print("Ngày sinh (yyyy-MM-dd): ");
             LocalDate dob = LocalDate.parse(scanner.nextLine());
+            if (!ValidateMember.isValidDateOfBirth(dob)) {
+                System.out.println("Ngày sinh không hợp lệ.");
+                return;
+            }
 
-            System.out.print("Giới tính: ");
+            System.out.print("Giới tính (Nam/Nữ): ");
             String gender = scanner.nextLine();
+            if (!ValidateMember.isValidGender(gender)) {
+                System.out.println("Giới tính không hợp lệ.");
+                return;
+            }
 
-            System.out.print("Số điện thoại: ");
+            System.out.print("Số điện thoại (vd:+84-0xxxxxxxxx): ");
             String phone = scanner.nextLine();
+            if (!ValidateMember.isValidPhone(phone)) {
+                System.out.println("Số điện thoại không hợp lệ.");
+                return;
+            }
 
-            System.out.print("Gói tập: ");
+            System.out.print("Gói tập (Normal/Plus/Pro/Promax): ");
             String type = scanner.nextLine();
+            if (!ValidateMember.isValidMembershipType(type)) {
+                System.out.println("Gói tập không hợp lệ.");
+                return;
+            }
 
             System.out.print("Ngày bắt đầu (yyyy-MM-dd): ");
             LocalDate start = LocalDate.parse(scanner.nextLine());
+            if (!ValidateMember.isValidStartDate(start)) {
+                System.out.println("Ngày bắt đầu không hợp lệ.");
+                return;
+            }
 
             Member member = new Member(id, name, dob, gender, phone, type, start, null);
             boolean result = memberController.addMember(member);
-            if (result) {
-                System.out.println("Đã thêm hội viên thành công");
-            } else {
-                System.out.println("Thêm hội viên thất bại");
-            }
+            System.out.println(result ? "Đã thêm hội viên thành công" : "Thêm hội viên thất bại");
         } catch (DateTimeParseException e) {
-            System.out.println("Sai định dạng. Vui lòng nhập theo yyyy-MM-dd.");
+            System.out.println("Sai định dạng ngày. Vui lòng nhập theo yyyy-MM-dd.");
         } catch (Exception e) {
-            System.out.println("Lỗi" + e.getMessage());
+            System.out.println("Lỗi: " + e.getMessage());
         }
     }
-
 
     private void updateMember() {
         System.out.print("Nhập ID hội viên cần sửa: ");
@@ -99,24 +124,81 @@ public class MemberView {
             System.out.println("Không tìm thấy hội viên");
             return;
         }
+
         try {
-            System.out.print("Tên mới: ");
-            member.setName(scanner.nextLine());
+            System.out.println("Tên hiện tại: " + member.getName());
+            System.out.print("Tên mới (Enter để giữ nguyên): ");
+            String name = scanner.nextLine();
+            if (!name.isEmpty()) {
+                if (ValidateMember.isValidName(name)) {
+                    member.setName(name);
+                } else {
+                    System.out.println("Tên không hợp lệ");
+                    return;
+                }
+            }
 
-            System.out.print("Số điện thoại mới: ");
-            member.setPhone(scanner.nextLine());
+            System.out.println("Số điện thoại hiện tại: " + member.getPhone());
+            System.out.print("SĐT mới (Enter để giữ nguyên): ");
+            String phone = scanner.nextLine();
+            if (!phone.isEmpty()) {
+                if (ValidateMember.isValidPhone(phone)) {
+                    member.setPhone(phone);
+                } else {
+                    System.out.println("SĐT không hợp lệ");
+                    return;
+                }
+            }
 
-            System.out.print("Giới tính mới: ");
-            member.setGender(scanner.nextLine());
+            System.out.println("Giới tính hiện tại: " + member.getGender());
+            System.out.print("Giới tính mới (Nam/Nữ, Enter để giữ nguyên): ");
+            String gender = scanner.nextLine();
+            if (!gender.isEmpty()) {
+                if (ValidateMember.isValidGender(gender)) {
+                    member.setGender(gender);
+                } else {
+                    System.out.println("Giới tính không hợp lệ");
+                    return;
+                }
+            }
 
-            System.out.print("Ngày sinh mới (yyyy-MM-dd): ");
-            member.setDateOfBirth(LocalDate.parse(scanner.nextLine()));
+            System.out.println("Ngày sinh hiện tại: " + member.getDateOfBirth());
+            System.out.print("Ngày sinh mới (yyyy-MM-dd, Enter để giữ nguyên): ");
+            String dobInput = scanner.nextLine();
+            if (!dobInput.isEmpty()) {
+                LocalDate dob = LocalDate.parse(dobInput);
+                if (ValidateMember.isValidDateOfBirth(dob)) {
+                    member.setDateOfBirth(dob);
+                } else {
+                    System.out.println("Ngày sinh không hợp lệ");
+                    return;
+                }
+            }
 
-            System.out.print("Loại gói tập mới: ");
-            member.setMembershipType(scanner.nextLine());
+            System.out.println("Loại gói tập hiện tại: " + member.getMembershipType());
+            System.out.print("Loại gói tập mới (Normal/Plus/Pro/Promax, Enter để giữ nguyên): ");
+            String type = scanner.nextLine();
+            if (!type.isEmpty()) {
+                if (ValidateMember.isValidMembershipType(type)) {
+                    member.setMembershipType(type);
+                } else {
+                    System.out.println("Loại gói tập không hợp lệ");
+                    return;
+                }
+            }
 
-            System.out.print("Ngày bắt đầu mới (yyyy-MM-dd): ");
-            member.setStartDate(LocalDate.parse(scanner.nextLine()));
+            System.out.println("Ngày bắt đầu hiện tại: " + member.getStartDate());
+            System.out.print("Ngày bắt đầu mới (yyyy-MM-dd, Enter để giữ nguyên): ");
+            String startInput = scanner.nextLine();
+            if (!startInput.isEmpty()) {
+                LocalDate start = LocalDate.parse(startInput);
+                if (ValidateMember.isValidStartDate(start)) {
+                    member.setStartDate(start);
+                } else {
+                    System.out.println("Ngày bắt đầu không hợp lệ");
+                    return;
+                }
+            }
 
             boolean result = memberController.updateMember(id, member);
             if (result) {
@@ -124,10 +206,11 @@ public class MemberView {
             } else {
                 System.out.println("Cập nhật thất bại");
             }
+
         } catch (DateTimeParseException e) {
-            System.out.println("Sai định dạng. Vui lòng nhập theo yyyy-MM-dd.");
+            System.out.println("Sai định dạng ngày. Vui lòng nhập đúng yyyy-MM-dd.");
         } catch (Exception e) {
-            System.out.println("Lỗi " + e.getMessage());
+            System.out.println("Lỗi: " + e.getMessage());
         }
     }
 
