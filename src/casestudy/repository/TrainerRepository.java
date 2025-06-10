@@ -1,59 +1,88 @@
 package casestudy.repository;
 
 import casestudy.model.Trainer;
+import casestudy.utils.ReadAndWriteFile;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TrainerRepository implements ITrainerRepository{
-    private static final List<Trainer> trainerList = new ArrayList<>();
-    static {
-        trainerList.add(new Trainer("T1", "Vinh", "Yoga", "0987654321", 28, "Nam", 5));
-        trainerList.add(new Trainer("T2", "Nam", "Cardio", "0976543210", 32, "Nam", 7));
-    }
+    private static final String FILE_PATH = "src/casestudy/data/trainer.csv";
 
     @Override
     public List<Trainer> findAll() {
-        return new ArrayList<>(trainerList);
+        List<String> lines = ReadAndWriteFile.readFile(FILE_PATH);
+        List<Trainer> trainers = new ArrayList<>();
+        for (String line : lines) {
+            String[] array = line.split(",");
+            if (array.length >= 7) {
+                Trainer trainer = new Trainer(
+                        array[0],
+                        array[1],
+                        array[2],
+                        array[3],
+                        Integer.parseInt(array[4]),
+                        array[5],
+                        Integer.parseInt(array[6])
+                );
+                trainers.add(trainer);
+            }
+        }
+        return trainers;
     }
 
     @Override
     public boolean add(Trainer trainer) {
-        if (findById(trainer.getId()) != null) {
-            return false;
-        }
-        return trainerList.add(trainer);
+        List<String> lines = new ArrayList<>();
+        lines.add(trainer.toCSV());
+        ReadAndWriteFile.writeFile(FILE_PATH, lines, true);
+        return true;
     }
 
     @Override
     public boolean delete(String id) {
-        Trainer trainer = findById(id);
-        if (trainer != null) {
-            return trainerList.remove(trainer);
+        List<Trainer> trainers = findAll();
+        List<String> newLines = new ArrayList<>();
+        boolean isDeleted = false;
+
+        for (Trainer trainer : trainers) {
+            if (!trainer.getId().equals(id)) {
+                newLines.add(trainer.toCSV());
+            } else {
+                isDeleted = true;
+            }
         }
-        return false;
+
+        if (isDeleted) {
+            ReadAndWriteFile.writeFile(FILE_PATH, newLines, false);
+        }
+
+        return isDeleted;
     }
 
     @Override
     public boolean update(String id, Trainer trainer) {
-        int index = -1;
-        for (int i = 0; i < trainerList.size(); i++) {
-            if (trainerList.get(i).getId().equals(id)) {
-                index = i;
-                break;
+        List<Trainer> trainers = findAll();
+        List<String> newLines = new ArrayList<>();
+        boolean found = false;
+
+        for (Trainer t : trainers) {
+            if (t.getId().equals(id)) {
+                newLines.add(trainer.toCSV());
+                found = true;
+            } else {
+                newLines.add(t.toCSV());
             }
         }
 
-        if (index != -1) {
-            trainerList.set(index, trainer);
-            return true;
-        }
-        return false;
+        ReadAndWriteFile.writeFile(FILE_PATH, newLines, false);
+        return found;
     }
 
     @Override
     public Trainer findById(String id) {
-        for (Trainer trainer : trainerList) {
+        List<Trainer> trainers = findAll();
+        for (Trainer trainer : trainers) {
             if (trainer.getId().equals(id)) {
                 return trainer;
             }
