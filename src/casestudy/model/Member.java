@@ -58,7 +58,7 @@ public class Member extends Person{
 
     @Override
     public String toString() {
-        return "Thành viên:" +
+        return "Hội viên:" +
                 " | " + super.toString() +
                 " | Ngày sinh: " + dateOfBirth +
                 " | Gói tập: '" + membershipType + '\'' +

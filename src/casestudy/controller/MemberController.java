@@ -48,4 +48,12 @@ public class MemberController {
     public List<Trainer> getAllTrainers() {
         return trainerService.findAll();
     }
+    public Trainer findTrainerById(String id) {
+        for (Trainer trainer : getAllTrainers()) {
+            if (trainer.getId().equalsIgnoreCase(id)) {
+                return trainer;
+            }
+        }
+        return null;
+    }
 }

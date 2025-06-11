@@ -56,64 +56,71 @@ public class MemberView {
     }
 
     private void addMember() {
-        try {
+        String id, name, gender, phone, type;
+        LocalDate dob, start;
+        while (true) {
             System.out.print("ID (MBxxx): ");
-            String id = scanner.nextLine();
-            if (!ValidateMember.isValidId(id)) {
-                System.out.println("ID không hợp lệ. Phải theo định dạng MBxxx.");
-                return;
-            }
-
-            System.out.print("Tên: ");
-            String name = scanner.nextLine();
-            if (!ValidateMember.isValidName(name)) {
-                System.out.println("Tên không hợp lệ. Viết hoa chữ cái đầu và không chứa số.");
-                return;
-            }
-
-            System.out.print("Ngày sinh (yyyy-MM-dd): ");
-            LocalDate dob = LocalDate.parse(scanner.nextLine());
-            if (!ValidateMember.isValidDateOfBirth(dob)) {
-                System.out.println("Ngày sinh không hợp lệ.");
-                return;
-            }
-
-            System.out.print("Giới tính (Nam/Nữ): ");
-            String gender = scanner.nextLine();
-            if (!ValidateMember.isValidGender(gender)) {
-                System.out.println("Giới tính không hợp lệ.");
-                return;
-            }
-
-            System.out.print("Số điện thoại (vd:+84-0xxxxxxxxx): ");
-            String phone = scanner.nextLine();
-            if (!ValidateMember.isValidPhone(phone)) {
-                System.out.println("Số điện thoại không hợp lệ.");
-                return;
-            }
-
-            System.out.print("Gói tập (Normal/Plus/Pro/Promax): ");
-            String type = scanner.nextLine();
-            if (!ValidateMember.isValidMembershipType(type)) {
-                System.out.println("Gói tập không hợp lệ.");
-                return;
-            }
-
-            System.out.print("Ngày bắt đầu (yyyy-MM-dd): ");
-            LocalDate start = LocalDate.parse(scanner.nextLine());
-            if (!ValidateMember.isValidStartDate(start)) {
-                System.out.println("Ngày bắt đầu không hợp lệ.");
-                return;
-            }
-
-            Member member = new Member(id, name, dob, gender, phone, type, start, null);
-            boolean result = memberController.addMember(member);
-            System.out.println(result ? "Đã thêm hội viên thành công" : "Thêm hội viên thất bại");
-        } catch (DateTimeParseException e) {
-            System.out.println("Sai định dạng ngày. Vui lòng nhập theo yyyy-MM-dd.");
-        } catch (Exception e) {
-            System.out.println("Lỗi: " + e.getMessage());
+            id = scanner.nextLine();
+            if (ValidateMember.isValidId(id))
+                break;
+            System.out.println("ID không hợp lệ. Phải theo định dạng MBxxx.");
         }
+
+        while (true) {
+            System.out.print("Tên: ");
+            name = scanner.nextLine();
+            if (ValidateMember.isValidName(name))
+                break;
+            System.out.println("Tên không hợp lệ. Viết hoa chữ cái đầu và không chứa số.");
+        }
+        while (true) {
+            try {
+                System.out.print("Ngày sinh (yyyy-MM-dd): ");
+                dob = LocalDate.parse(scanner.nextLine());
+                if (ValidateMember.isValidDateOfBirth(dob)) break;
+                System.out.println("Ngày sinh không hợp lệ. Phải từ 18 tuổi trở lên.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Sai định dạng ngày. Vui lòng nhập theo yyyy-MM-dd.");
+            }
+        }
+
+
+        while (true) {
+            System.out.print("Giới tính (Nam/Nữ): ");
+            gender = scanner.nextLine();
+            if (ValidateMember.isValidGender(gender)) break;
+            System.out.println("Giới tính không hợp lệ. Nhập 'Nam' hoặc 'Nữ'.");
+        }
+
+        while (true) {
+            System.out.print("Số điện thoại (vd:+84-0xxxxxxxxx): ");
+            phone = scanner.nextLine();
+            if (ValidateMember.isValidPhone(phone)) break;
+            System.out.println("Số điện thoại không hợp lệ.");
+        }
+
+
+        while (true) {
+            System.out.print("Gói tập (Normal/Plus/Pro/Promax): ");
+            type = scanner.nextLine();
+            if (ValidateMember.isValidMembershipType(type)) break;
+            System.out.println("Gói tập không hợp lệ.");
+        }
+
+        while (true) {
+            try {
+                System.out.print("Ngày bắt đầu (yyyy-MM-dd): ");
+                start = LocalDate.parse(scanner.nextLine());
+                if (ValidateMember.isValidStartDate(start)) break;
+                System.out.println("Ngày bắt đầu không hợp lệ. Không được trong quá khứ.");
+            } catch (DateTimeParseException e) {
+                System.out.println("Sai định dạng ngày. Vui lòng nhập theo yyyy-MM-dd.");
+            }
+        }
+
+        Member member = new Member(id, name, dob, gender, phone, type, start, null);
+        boolean result = memberController.addMember(member);
+        System.out.println(result ? " Đã thêm hội viên thành công." : "Thêm hội viên thất bại.");
     }
 
     private void updateMember() {
@@ -241,9 +248,10 @@ public class MemberView {
     public void assignTrainer() {
         List<Member> members = memberController.getAllMembers();
         if (members.isEmpty()) {
-            System.out.println("Không có hội viên nào");
+            System.out.println("Không có hội viên nào.");
             return;
         }
+
         System.out.println("DANH SÁCH HỘI VIÊN:");
         for (Member m : members) {
             System.out.println("ID: " + m.getId() + " | Tên: " + m.getName());
@@ -253,38 +261,51 @@ public class MemberView {
         String memberId = scanner.nextLine();
         Member member = memberController.findMemberById(memberId);
         if (member == null) {
-            System.out.println("Không tìm thấy hội viên");
+            System.out.println("Không tìm thấy hội viên.");
             return;
+        }
+
+        if (member.getTrainerId() != null && !member.getTrainerId().isEmpty()) {
+            Trainer currentTrainer = memberController.findTrainerById(member.getTrainerId());
+            if (currentTrainer != null) {
+                System.out.println("Hội viên đã được gán cho HLV: " + currentTrainer.getName());
+            } else {
+                System.out.println("Hội viên đã được gán cho HLV có ID: " + member.getTrainerId());
+            }
+            System.out.print("Bạn có muốn đổi HLV không? (y/n): ");
+            String confirm = scanner.nextLine().trim().toLowerCase();
+            if (!confirm.equals("y")) {
+                System.out.println("Không thay đổi HLV.");
+                return;
+            }
         }
 
         List<Trainer> trainers = memberController.getAllTrainers();
         if (trainers.isEmpty()) {
-            System.out.println("Không có huấn luyện viên nào");
+            System.out.println("Không có huấn luyện viên nào.");
             return;
         }
+
         System.out.println("DANH SÁCH HUẤN LUYỆN VIÊN:");
         for (Trainer t : trainers) {
             System.out.println("ID: " + t.getId() + " | Tên: " + t.getName());
         }
-        System.out.print("Nhập ID huấn luyện viên: ");
-        String trainerId = scanner.nextLine();
+
         Trainer trainer = null;
-        for (Trainer t : memberController.getAllTrainers()) {
-            if (t.getId().equals(trainerId)) {
-                trainer = t;
-                break;
+        while (trainer == null) {
+            System.out.print("Nhập ID huấn luyện viên: ");
+            String trainerId = scanner.nextLine();
+            trainer = memberController.findTrainerById(trainerId);
+            if (trainer == null) {
+                System.out.println("Không tìm thấy huấn luyện viên. Vui lòng nhập lại.");
+            } else {
+                member.setTrainerId(trainer.getId());
+                memberController.assignTrainerToMember(member.getId(), trainer.getId());
+                System.out.println("Đã gán HLV " + trainer.getName() + " cho hội viên " + member.getName());
             }
         }
-
-        if (trainer == null) {
-            System.out.println("Không tìm thấy huấn luyện viên");
-            return;
-        }
-        member.setTrainerId(trainerId);
-        memberController.assignTrainerToMember(memberId, trainerId);
-        System.out.println("Đã gán HLV " + trainer.getName() + " cho hội viên " + member.getName());
-
     }
+
     public void searchMemberById() {
         System.out.print("Nhập ID hội viên cần tìm: ");
         String id = scanner.nextLine();

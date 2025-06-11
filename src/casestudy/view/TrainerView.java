@@ -51,70 +51,75 @@ public class TrainerView {
     }
 
     private void addTrainer() {
-        System.out.print("ID (định dạng TRxxx): ");
-        String id = scanner.nextLine();
-        if (!ValidateTrainer.isValidId(id)) {
-            System.out.println("ID không hợp lệ (ví dụ: TR001).");
-            return;
+        String id;
+        while (true) {
+            System.out.print("ID (định dạng TRxxx): ");
+            id = scanner.nextLine();
+            if (!ValidateTrainer.isValidId(id)) {
+                System.out.println("ID không hợp lệ (ví dụ: TR001).");
+                continue;
+            }
+            if (trainerController.findTrainerById(id) != null) {
+                System.out.println("ID đã tồn tại.");
+                continue;
+            }
+            break;
         }
 
-        if (trainerController.findTrainerById(id) != null) {
-            System.out.println("ID đã tồn tại.");
-            return;
-        }
-
-        System.out.print("Tên: ");
-        String name = scanner.nextLine();
-        if (!ValidateTrainer.isValidName(name)) {
+        String name;
+        while (true) {
+            System.out.print("Tên: ");
+            name = scanner.nextLine();
+            if (ValidateTrainer.isValidName(name)) break;
             System.out.println("Tên không hợp lệ. Mỗi từ phải viết hoa chữ cái đầu.");
-            return;
         }
 
-        System.out.print("Tuổi: ");
         int age;
-        try {
-            age = Integer.parseInt(scanner.nextLine());
-            if (age < 18 || age > 80) {
+        while (true) {
+            System.out.print("Tuổi: ");
+            try {
+                age = Integer.parseInt(scanner.nextLine());
+                if (age >= 18 && age <= 80) break;
                 System.out.println("Tuổi phải từ 18 đến 80.");
-                return;
+            } catch (NumberFormatException e) {
+                System.out.println("Tuổi phải là số.");
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Tuổi phải là số.");
-            return;
         }
 
-        System.out.print("Giới tính (Nam/Nữ): ");
-        String gender = scanner.nextLine();
-        if (!ValidateTrainer.isValidGender(gender)) {
+        String gender;
+        while (true) {
+            System.out.print("Giới tính (Nam/Nữ): ");
+            gender = scanner.nextLine();
+            if (ValidateTrainer.isValidGender(gender)) break;
             System.out.println("Giới tính không hợp lệ.");
-            return;
         }
 
-        System.out.print("Số điện thoại (+84-0xxxxxxxxx): ");
-        String phone = scanner.nextLine();
-        if (!ValidateTrainer.isValidPhone(phone)) {
+        String phone;
+        while (true) {
+            System.out.print("Số điện thoại (+84-0xxxxxxxxx): ");
+            phone = scanner.nextLine();
+            if (ValidateTrainer.isValidPhone(phone)) break;
             System.out.println("Số điện thoại không hợp lệ.");
-            return;
         }
 
-        System.out.print("Chuyên môn: ");
-        String specialty = scanner.nextLine();
-        if (!ValidateTrainer.isValidSpecialty(specialty)) {
+        String specialty;
+        while (true) {
+            System.out.print("Chuyên môn: ");
+            specialty = scanner.nextLine();
+            if (ValidateTrainer.isValidSpecialty(specialty)) break;
             System.out.println("Chuyên môn không hợp lệ (chỉ chứa chữ cái, khoảng trắng và từ 2 đến 50 ký tự).");
-            return;
         }
 
-        System.out.print("Kinh nghiệm (năm): ");
         int experience;
-        try {
-            experience = Integer.parseInt(scanner.nextLine());
-            if (experience < 0 || experience > 60) {
+        while (true) {
+            System.out.print("Kinh nghiệm (năm): ");
+            try {
+                experience = Integer.parseInt(scanner.nextLine());
+                if (experience >= 0 && experience <= 60) break;
                 System.out.println("Kinh nghiệm phải từ 0 đến 60 năm.");
-                return;
+            } catch (NumberFormatException e) {
+                System.out.println("Kinh nghiệm phải là số.");
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Kinh nghiệm phải là số.");
-            return;
         }
 
         Trainer trainer = new Trainer(id, name, specialty, phone, age, gender, experience);
